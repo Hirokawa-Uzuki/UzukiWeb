@@ -1,0 +1,28 @@
+﻿@model IEnumerable<UzukiWeb.Models.Truyen>
+@{
+    ViewData["Title"] = "Góc Đề Cử";
+}
+
+<main class="container main-content pb-5" style="min-height: 80vh; padding-top: 110px;">
+    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+        <h3 class="fw-black m-0" style="color: #000066;"><i class="bi bi-star-fill text-warning me-3"></i>GÓC ĐỀ CỬ TỪ BIÊN TẬP VIÊN</h3>
+    </div>
+
+    <div class="row g-3 g-md-4 mb-5">
+        @foreach (var item in Model)
+        {
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="/Home/Detail/@item.Id" class="text-decoration-none">
+                    <div class="comic-card h-100 d-flex flex-column border border-warning border-2">
+                        <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 shadow-sm" style="z-index: 3;"><i class="bi bi-hand-thumbs-up-fill"></i> Đề cử</span>
+                        <img src="~/images/@item.AnhBia" class="comic-cover" alt="@item.TenTruyen">
+                        <div class="comic-info p-2 flex-grow-1 d-flex flex-column text-center bg-light">
+                            <div class="comic-title" style="font-size: 0.95rem;">@item.TenTruyen</div>
+                            <span class="badge bg-secondary w-100 mt-2">@item.DanhMuc?.TenDanhMuc</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</main>

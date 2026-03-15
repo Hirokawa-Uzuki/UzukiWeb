@@ -1,0 +1,188 @@
+﻿@model UzukiWeb.Models.Truyen
+@{
+    ViewData["Title"] = Model.TenTruyen;
+    // Kiểm tra xem User đã mua trọn bộ truyện này chưa (Truyền từ Controller qua ViewBag)
+    bool daMuaFull = ViewBag.DaMuaFull ?? false;
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<main class="container pb-5" style="margin-top: 110px; min-height: 80vh;">
+    <div class="row mb-5 bg-white p-4 rounded-4 shadow-sm">
+        <div class="col-md-3 text-center">
+            <img src="~/images/@Model.AnhBia" class="rounded-3 shadow w-100" style="aspect-ratio: 2/3; object-fit: cover;" alt="Cover">
+        </div>
+        <div class="col-md-9 d-flex flex-column">
+            <div class="mb-2">
+                <span class="badge bg-primary px-3 py-2 fs-6">@Model.DanhMuc?.TenDanhMuc</span>
+                @if (Model.GiaCoin > 0 && Model.IsHotSale == true)
+                {
+                    <span class="badge bg-danger px-3 py-2 fs-6 shake-anim ms-2">Đang Sale @Model.PhanTramGiam%</span>
+                }
+            </div>
+            <h1 class="fw-black" style="color: #000066;">@Model.TenTruyen</h1>
+            <p class="text-muted fs-5"><i class="bi bi-pen"></i> Tác giả: <strong>@Model.TacGia</strong></p>
+            <div class="d-flex gap-4 text-muted mb-4">
+                <span><i class="bi bi-eye-fill text-info"></i> Lượt xem: @Model.LuotXem</span>
+                <span><i class="bi bi-star-fill text-warning"></i> Đánh giá: @Model.DiemDanhGia/5.0</span>
+                <span><i class="bi bi-clock-fill text-success"></i> Trạng thái: @Model.TrangThai</span>
+            </div>
+
+            <p class="fs-6" style="line-height: 1.8;">@Model.MoTa</p>
+
+            <!-- KHỐI MUA TRỌN BỘ (NEW) -->
+            @if (Model.GiaCoin > 0)
+            {
+                <div class="mt-2 mb-4 p-3 rounded-4" style="background-color: #fff5f5; border: 2px dashed #ff4444;">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="fw-black text-danger mb-1"><i class="bi bi-gem"></i> SỞ HỮU TRỌN BỘ</h5>
+                            <p class="small text-muted mb-0">Mở khóa vĩnh viễn tất cả chương của bộ truyện này.</p>
+                        </div>
+                        @if (daMuaFull)
+                        {
+                            <button class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm px-4" disabled>
+                                <i class="bi bi-check-all"></i> ĐÃ SỞ HỮU
+                            </button>
+                        }
+                        else
+                        {
+                            <button onclick="confirmBuyFull(@Model.Id, @Model.GiaCoin)" class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm px-4">
+                                Mua Ngay @Model.GiaCoin Coin
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="mt-auto d-flex gap-3">
+                @{
+                    var chuongDauTien = Model.Chuongs?.OrderBy(c => c.SoThuTu).FirstOrDefault();
+                }
+                @if (chuongDauTien != null)
+                {
+                    <a href="/Home/Read/@chuongDauTien.Id" class="btn btn-primary rounded-pill px-5 fw-bold fs-5 shadow-sm">
+                        <i class="bi bi-book-half"></i> Đọc Từ Đầu
+                    </a>
+                }
+                else
+                {
+                    <button class="btn btn-secondary rounded-pill px-5 fw-bold fs-5 shadow-sm" disabled>
+                        <i class="bi bi-book-half"></i> Đọc Từ Đầu
+                    </button>
+                }
+                <!--<button class="btn btn-outline-danger rounded-pill px-4 fw-bold fs-5 shadow-sm"><i class="bi bi-heart"></i> Yêu Thích</button>-->
+            </div>
+        </div>
+    </div>
+
+    <h3 class="fw-black mb-4 border-bottom border-3 border-info pb-2 d-inline-block">DANH SÁCH CHƯƠNG</h3>
+    <div class="list-group shadow-sm">
+        @if (Model.Chuongs != null && Model.Chuongs.Any())
+        {
+            var danhSachDaMua = ViewBag.DanhSachDaMua as List<int> ?? new List<int>();
+
+            foreach (var chuong in Model.Chuongs)
+            {
+                int giaThucTe = chuong.GiaCoin;
+                bool dangSale = (Model.IsHotSale == true && Model.PhanTramGiam > 0);
+
+                if (dangSale)
+                {
+                    giaThucTe = chuong.GiaCoin - (chuong.GiaCoin * Model.PhanTramGiam / 100);
+                }
+
+                bool isFree = giaThucTe <= 0;
+                bool isBought = danhSachDaMua.Contains(chuong.Id) || daMuaFull;
+
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+                    <div class="fw-bold" style="font-size: 1.1rem;">@chuong.TenChuong</div>
+
+                    @if (isFree)
+                    {
+                        <a href="/Home/Read/@chuong.Id" class="btn btn-sm btn-success rounded-pill px-4 fw-bold"><i class="bi bi-unlock"></i> Đọc Miễn Phí</a>
+                    }
+                    else if (isBought)
+                    {
+                        <a href="/Home/Read/@chuong.Id" class="btn btn-sm btn-info text-white rounded-pill px-4 fw-bold"><i class="bi bi-check-circle"></i> @(daMuaFull ? "Mở Khóa Full" : "Đã Mua")</a>
+                    }
+                    else
+                    {
+                        <button onclick="UnlockChapter(@chuong.Id, @giaThucTe, '@chuong.TenChuong')" class="btn btn-sm btn-warning rounded-pill px-4 fw-bold shadow-sm">
+                            <i class="bi bi-lock-fill"></i> Mở Khóa
+                            (@(dangSale && chuong.GiaCoin > 0 ? chuong.GiaCoin + " -> " : "") @giaThucTe Coin)
+                        </button>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="p-4 text-center text-muted">Truyện đang được cập nhật chương mới, vui lòng quay lại sau!</div>
+        }
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        // 1. Logic mở khóa chương lẻ
+        function UnlockChapter(chuongId, giaCoin, tenChuong) {
+            Swal.fire({
+                title: 'Mở Khóa Chương VIP?',
+                text: `Bạn có chắc chắn muốn dùng ${giaCoin} Coin để mở khóa "${tenChuong}" không?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#ff8800',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Đồng ý, Mở khóa!',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/Home/UnlockChapter', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ chuongId: chuongId })
+                    })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.success) {
+                            Swal.fire('Thành công!', res.message, 'success').then(() => { location.reload(); });
+                        } else {
+                            Swal.fire('Thất bại!', res.message, 'error');
+                        }
+                    });
+                }
+            })
+        }
+
+        // 2. Logic mua trọn bộ (NEW)
+        function confirmBuyFull(id, coin) {
+            Swal.fire({
+                title: 'Xác Nhận Mua Trọn Bộ?',
+                text: `Bạn có chắc muốn dùng ${coin} Coin để sở hữu vĩnh viễn bộ truyện này không?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xác nhận mua!',
+                cancelButtonText: 'Để sau'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/Home/BuyFullTruyen', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ truyenId: id })
+                    })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.success) {
+                            Swal.fire('Thành công!', res.message, 'success').then(() => { location.reload(); });
+                        } else {
+                            Swal.fire('Thất bại!', res.message, 'error');
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+}

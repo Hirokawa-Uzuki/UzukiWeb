@@ -1,0 +1,34 @@
+﻿@model IEnumerable<UzukiWeb.Models.Truyen>
+@{
+    ViewData["Title"] = "Bảng Xếp Hạng";
+}
+
+<main class="container main-content pb-5" style="min-height: 80vh; padding-top: 110px;">
+    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+        <h3 class="fw-black m-0" style="color: #ff8800;"><i class="bi bi-trophy-fill me-3"></i>BẢNG XẾP HẠNG ĐỌC NHIỀU NHẤT</h3>
+    </div>
+
+    <div class="row g-4 mb-5">
+        @{
+            int rank = 1;
+        }
+        @foreach (var item in Model)
+        {
+            string rankClass = rank == 1 ? "rank-1" : (rank == 2 ? "rank-2" : "");
+
+            <div class="col-6 col-md-3 col-lg-2 position-relative">
+                <a href="/Home/Detail/@item.Id" class="text-decoration-none">
+                    <div class="comic-card h-100 d-flex flex-column pt-3">
+                        <div class="rank-badge @rankClass shadow-lg" style="bottom: 75px; left: -10px;">@rank</div>
+                        <img src="~/images/@item.AnhBia" class="comic-cover rounded-3" alt="@item.TenTruyen">
+                        <div class="comic-info p-2 flex-grow-1 d-flex flex-column text-center">
+                            <div class="comic-title" style="font-size: 0.95rem;">@item.TenTruyen</div>
+                            <div class="mt-auto text-muted small fw-bold"><i class="bi bi-eye"></i> @item.LuotXem.ToString("N0") view</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            rank++;
+        }
+    </div>
+</main>

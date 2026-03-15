@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Thanh Toán Đơn Hàng Shop";
+    var orderId = TempData["ShopThanhToan_OrderId"]?.ToString() ?? "0";
+    var tongTien = TempData["ShopThanhToan_TongTien"] != null ? Convert.ToInt32(TempData["ShopThanhToan_TongTien"]) : 0;
+}
+
+<main class="container pb-5" style="margin-top: 110px; min-height: 80vh;">
+    <div class="text-center mb-5">
+        <h2 class="fw-black" style="color: #000066;">THANH TOÁN ĐƠN HÀNG SÁCH</h2>
+        <p class="text-muted">Vui lòng chọn phương thức thanh toán để hoàn tất đơn hàng #@orderId</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="bi bi-credit-card-2-front text-primary me-2"></i>Phương thức thanh toán</h5>
+
+                <ul class="nav nav-pills flex-column gap-3 mb-4" id="paymentTabs" role="tablist">
+                    <li class="nav-item">
+                        <label class="nav-link active border rounded-3 p-3 d-flex align-items-center shadow-sm" data-bs-toggle="pill" data-bs-target="#qr-method" style="cursor: pointer;">
+                            <input class="form-check-input me-3 fs-5" type="radio" name="paymentMethod" checked>
+                            <img src="~/images/Momo_logo.png" width="35" class="me-3 rounded">
+                            <div class="text-start">
+                                <div class="fw-bold text-dark">Ví Momo / VNPay</div>
+                                <div class="small text-muted">Quét mã QR bằng ứng dụng ngân hàng</div>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+
+                <div class="tab-content bg-light rounded-3 p-4 border">
+                    <div class="tab-pane fade show active text-center" id="qr-method">
+                        <h6 class="fw-bold text-danger mb-3">Quét mã để thanh toán đơn hàng #@orderId</h6>
+                        <div class="bg-white d-inline-block p-3 rounded-4 shadow-sm mb-3">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ThanhToan_DonHang_@orderId" class="img-fluid" alt="QR Code">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="bi bi-receipt text-success me-2"></i>Tóm tắt đơn hàng</h5>
+
+                <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+                    <span class="text-muted">Mã đơn hàng:</span>
+                    <span class="fw-bold text-dark">#@orderId</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="fw-bold fs-5">Cần thanh toán:</span>
+                    <span class="fw-black fs-3 text-danger">@tongTien.ToString("N0") đ</span>
+                </div>
+
+                <form asp-controller="Home" asp-action="ProcessPaymentShop" method="post">
+                    <input type="hidden" name="orderId" value="@orderId" />
+                    <button type="button" onclick="fakePaymentProcess(this)" class="btn btn-warning w-100 fw-black fs-5 py-3 rounded-pill shadow-sm">
+                        ĐÃ CHUYỂN KHOẢN
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        function fakePaymentProcess(btn) {
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Đang xử lý...';
+            btn.classList.add('disabled');
+            setTimeout(function() { btn.closest('form').submit(); }, 2000);
+        }
+    </script>
+}

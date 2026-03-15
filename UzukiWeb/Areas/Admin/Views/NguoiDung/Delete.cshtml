@@ -1,0 +1,37 @@
+﻿@model UzukiWeb.Models.TaiKhoan
+@{
+    ViewData["Title"] = "Xác nhận Xóa Người Dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0 rounded-4 w-50 mx-auto mt-5 p-4 text-center">
+    <div class="mb-3">
+        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+    </div>
+    <h3 class="fw-bold text-danger mb-3">CẢNH BÁO XÓA!</h3>
+    <p class="text-muted mb-4">Bạn có chắc chắn muốn xóa vĩnh viễn người dùng này khỏi hệ thống? Mọi lịch sử mua truyện của họ cũng sẽ bị ảnh hưởng!</p>
+
+    <!-- Khung thông tin User sắp bị xóa -->
+    <div class="border rounded-3 p-3 text-start d-flex align-items-center mb-4 bg-light mx-auto" style="max-width: 400px;">
+        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <div>
+            <h5 class="fw-bold text-dark mb-1">@Model.TenDangNhap</h5>
+            <span class="badge bg-secondary">@Model.Email</span>
+        </div>
+    </div>
+
+    <!-- Nút xác nhận -->
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="d-flex justify-content-center gap-3">
+            <button type="submit" class="btn btn-danger fw-bold px-4 rounded-pill">
+                <i class="bi bi-trash"></i> Xác Nhận Xóa Thật
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary fw-bold px-4 rounded-pill">
+                <i class="bi bi-x-circle"></i> Hủy, Quay lại
+            </a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,239 @@
+﻿@model UzukiWeb.Models.TaiKhoan
+@{
+    ViewData["Title"] = "Trang Cá Nhân";
+}
+
+<main class="container py-5" style="margin-top: 100px; min-height: 80vh;">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i><strong>@TempData["Success"]</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i><strong>@TempData["Error"]</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body text-center p-4 bg-light">
+                    <img src="https://placehold.co/100x100/00aaff/fff?text=@Model.TenDangNhap.Substring(0, 1).ToUpper()" class="rounded-circle mb-3 border border-4 border-white shadow-sm" alt="Avatar">
+                    <h5 class="fw-black" style="color: #000066;">@Model.TenDangNhap</h5>
+                    <p class="text-muted small mb-2">Thành viên từ: @Model.NgayTao.ToString("MM/yyyy")</p>
+                    <span class="badge bg-danger rounded-pill px-3 py-2 fs-6 shadow-sm"><i class="bi bi-gem"></i> @Model.SoDuCoin Coin</span>
+                </div>
+                <div class="list-group list-group-flush" id="profile-tabs" role="tablist">
+                    <a class="list-group-item list-group-item-action active fw-bold py-3" data-bs-toggle="list" href="#tab-tusach" role="tab">
+                        <i class="bi bi-book-half me-2 text-primary"></i> Tủ Sách Của Tôi
+                    </a>
+                    <a class="list-group-item list-group-item-action fw-bold py-3" data-bs-toggle="list" href="#tab-donhang" role="tab">
+                        <i class="bi bi-box2-heart me-2 text-danger"></i> Đơn Hàng Của Tôi
+                    </a>
+                    <a class="list-group-item list-group-item-action fw-bold py-3" data-bs-toggle="list" href="#tab-lichsu" role="tab">
+                        <i class="bi bi-clock-history me-2 text-info"></i> Lịch Sử Giao Dịch
+                    </a>
+                    <a class="list-group-item list-group-item-action fw-bold py-3" data-bs-toggle="list" href="#tab-napcoin" role="tab">
+                        <i class="bi bi-wallet2 me-2 text-warning"></i> Nạp Premium (Coin)
+                    </a>
+                    <a class="list-group-item list-group-item-action fw-bold py-3" data-bs-toggle="list" href="#tab-baomat" role="tab">
+                        <i class="bi bi-shield-lock me-2 text-success"></i> Bảo Mật & Mật Khẩu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content" id="nav-tabContent">
+
+                <div class="tab-pane fade show active" id="tab-tusach" role="tabpanel">
+                    <h4 class="fw-black mb-4 border-bottom pb-2" style="color: #000066;"><i class="bi bi-book-half text-primary me-2"></i> TỦ SÁCH CỦA TÔI</h4>
+                    <div class="row g-3">
+                        @if (ViewBag.TuSach != null && ((List<UzukiWeb.Models.Truyen>)ViewBag.TuSach).Any())
+                        {
+                            foreach (var truyen in (List<UzukiWeb.Models.Truyen>)ViewBag.TuSach)
+                            {
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <a href="/Home/Detail/@truyen.Id" class="text-decoration-none">
+                                        <div class="comic-card h-100 d-flex flex-column border">
+                                            <span class="badge bg-success position-absolute top-0 end-0 m-2 shadow-sm" style="z-index: 3;">Đã Sở Hữu</span>
+                                            <img src="~/images/@truyen.AnhBia" class="comic-cover" alt="@truyen.TenTruyen">
+                                            <div class="comic-info p-2 flex-grow-1 text-center bg-white">
+                                                <div class="comic-title" style="font-size: 0.9rem;">@truyen.TenTruyen</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col-12 text-center py-5">
+                                <i class="bi bi-box-seam text-muted" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-2">Tủ sách trống. Bạn chưa mua bộ truyện nào cả.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab-donhang" role="tabpanel">
+                    <h4 class="fw-black mb-4 border-bottom pb-2" style="color: #000066;"><i class="bi bi-box2-heart text-danger me-2"></i> ĐƠN HÀNG CỦA TÔI</h4>
+                    <div class="table-responsive bg-white rounded-4 shadow-sm p-3">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Ngày Đặt</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Trạng Thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.DonHangs != null && ((List<UzukiWeb.Models.DonHang>)ViewBag.DonHangs).Any())
+                                {
+                                    foreach (var dh in (List<UzukiWeb.Models.DonHang>)ViewBag.DonHangs)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">#@dh.Id</td>
+                                            <td class="text-muted small">@dh.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td class="fw-black text-danger">@dh.TongTien.ToString("N0") đ</td>
+                                            <td>
+                                                @if (dh.TrangThai.Contains("Chờ thanh toán"))
+                                                {
+                                                    <span class="badge bg-warning text-dark">@dh.TrangThai</span>
+                                                }
+                                                else
+                                                {
+
+                                                    <span class="badge bg-success">@dh.TrangThai</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="4" class="text-center text-muted py-4">Bạn chưa có đơn đặt hàng nào.</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab-lichsu" role="tabpanel">
+                    <h4 class="fw-black mb-4 border-bottom pb-2" style="color: #000066;"><i class="bi bi-clock-history text-info me-2"></i> LỊCH SỬ MUA CHƯƠNG</h4>
+                    <div class="table-responsive bg-white rounded-4 shadow-sm p-3">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Tên giao dịch</th>
+                                    <th>Loại</th>
+                                    <th class="text-danger text-end">Số Coin trừ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.LichSuGiaoDich != null && ((List<UzukiWeb.Models.GiaoDichHistory>)ViewBag.LichSuGiaoDich).Any())
+                                {
+                                    foreach (var item in (List<UzukiWeb.Models.GiaoDichHistory>)ViewBag.LichSuGiaoDich)
+                                    {
+                                        <tr>
+                                            <td class="text-muted small">@item.NgayGiaoDich.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td class="fw-bold text-dark">@item.TenGiaoDich</td>
+                                            <td>
+                                                @if (item.LoaiGiaoDich == "Mua Trọn Bộ")
+                                                {
+                                                    <span class="badge bg-danger rounded-pill shadow-sm"><i class="bi bi-gem"></i> @item.LoaiGiaoDich</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary rounded-pill">@item.LoaiGiaoDich</span>
+                                                }
+                                            </td>
+                                            <td class="text-danger fw-bold text-end">- @item.SoCoin</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">Bạn chưa có giao dịch nào!</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab-napcoin" role="tabpanel">
+                    <h4 class="fw-black mb-4 border-bottom pb-2" style="color: #000066;"><i class="bi bi-wallet2 text-warning me-2"></i> NẠP PREMIUM COIN</h4>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="card text-center border-warning border-2 shadow-sm h-100">
+                                <div class="card-body">
+                                    <h1 class="fw-black text-warning">100</h1>
+                                    <p class="text-muted fw-bold">Coin</p>
+                                    <h5 class="text-danger fw-black">10.000 VNĐ</h5>
+                                    <form asp-action="TopUp" method="post" class="mt-3">
+                                        <input type="hidden" name="coinAmount" value="100" />
+                                        <button type="submit" class="btn btn-warning w-100 fw-bold rounded-pill">Nạp Ngay</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center border-primary border-2 shadow-sm h-100 position-relative">
+                                <span class="badge bg-danger position-absolute top-0 start-50 translate-middle rounded-pill px-3">BÁN CHẠY</span>
+                                <div class="card-body pt-4">
+                                    <h1 class="fw-black text-primary">500</h1>
+                                    <p class="text-muted fw-bold">Coin</p>
+                                    <h5 class="text-danger fw-black">45.000 VNĐ</h5>
+                                    <form asp-action="TopUp" method="post" class="mt-3">
+                                        <input type="hidden" name="coinAmount" value="500" />
+                                        <button type="submit" class="btn btn-primary w-100 fw-bold rounded-pill">Nạp Ngay</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center border-danger border-2 shadow-sm h-100">
+                                <div class="card-body">
+                                    <h1 class="fw-black text-danger">1000</h1>
+                                    <p class="text-muted fw-bold">Coin</p>
+                                    <h5 class="text-danger fw-black">80.000 VNĐ</h5>
+                                    <form asp-action="TopUp" method="post" class="mt-3">
+                                        <input type="hidden" name="coinAmount" value="1000" />
+                                        <button type="submit" class="btn btn-outline-danger w-100 fw-bold rounded-pill">Nạp Ngay</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab-baomat" role="tabpanel">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h4 class="fw-black mb-4 border-bottom pb-2" style="color: #000066;"><i class="bi bi-shield-lock text-success me-2"></i> ĐỔI MẬT KHẨU</h4>
+                        <form asp-action="ChangePassword" method="post">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Mật khẩu hiện tại</label>
+                                <input type="password" name="oldPassword" class="form-control rounded-pill bg-light" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Mật khẩu mới</label>
+                                <input type="password" name="newPassword" class="form-control rounded-pill" required minlength="6" />
+                            </div>
+                            <button type="submit" class="btn btn-success rounded-pill fw-bold px-4 mt-2">Xác Nhận Đổi Mật Khẩu</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>

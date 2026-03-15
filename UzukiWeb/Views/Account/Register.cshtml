@@ -1,0 +1,50 @@
+﻿@model UzukiWeb.Models.TaiKhoan
+@{
+    ViewData["Title"] = "Đăng Ký";
+}
+
+<main class="container py-5" style="margin-top: 100px; min-height: 70vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+                <h3 class="text-center fw-black mb-4" style="color: #ff3366;">TẠO TÀI KHOẢN MỚI</h3>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="TenDangNhap" class="form-label fw-bold"></label>
+                        <input asp-for="TenDangNhap" class="form-control form-control-lg rounded-pill" />
+                        <span asp-validation-for="TenDangNhap" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-bold"></label>
+                        <input asp-for="Email" type="email" class="form-control form-control-lg rounded-pill" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="MatKhau" class="form-label fw-bold"></label>
+                        <input asp-for="MatKhau" type="password" class="form-control form-control-lg rounded-pill" />
+                        <span asp-validation-for="MatKhau" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100 rounded-pill fw-bold fs-5 py-2">Đăng Ký Khách Hàng</button>
+                </form>
+                <div class="text-center mt-4">
+                    <span class="text-muted">Đã có tài khoản?</span> <a href="/Account/Login" class="text-info fw-bold">Đăng nhập</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Hỗ Trợ / Liên Hệ";
+}
+
+<!-- Thêm margin-top: 120px để đẩy toàn bộ nội dung xuống dưới Header -->
+<div class="container pb-5" style="margin-top: 120px; min-height: 70vh;">
+    <!-- Tiêu đề trang -->
+    <div class="text-center mb-5">
+        <h1 class="fw-black text-primary" style="font-size: 2.5rem;">LIÊN HỆ VỚI UZUKI</h1>
+        <p class="text-muted fs-5">Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn 24/7</p>
+    </div>
+
+    <div class="row g-5">
+        <!-- Cột trái: Thông tin liên hệ -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-primary text-white">
+                <h3 class="fw-bold mb-4">Thông Tin Liên Hệ</h3>
+                <p class="mb-4">Nếu bạn gặp vấn đề về nạp Coin, lỗi đọc truyện hay đơn hàng Shop, đừng ngần ngại liên hệ với Uzuki qua các kênh dưới đây:</p>
+
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">Địa chỉ</h6>
+                        <small>Trường Đại học Uzuki, Uzuki, Uzuki</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
+                        <i class="bi bi-telephone-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">Điện thoại / Zalo</h6>
+                        <small>0987.654.321</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <div class="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; font-size: 1.5rem;">
+                        <i class="bi bi-envelope-paper-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">Email Hỗ Trợ</h6>
+                        <small>support@uzukiweb.com</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Form gửi tin nhắn -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 h-100 p-4 p-md-5">
+                <h3 class="fw-bold text-dark mb-4">Gửi Lời Nhắn</h3>
+
+                <form action="/Home/SubmitContact" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Họ và Tên <span class="text-danger">*</span></label>
+                            <input type="text" name="hoTen" class="form-control form-control-lg bg-light" placeholder="Nhập tên của bạn" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email liên hệ <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control form-control-lg bg-light" placeholder="name@example.com" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Nội dung cần hỗ trợ <span class="text-danger">*</span></label>
+                            <textarea name="noiDung" class="form-control form-control-lg bg-light" rows="5" placeholder="Bạn đang gặp khó khăn gì? Hãy mô tả chi tiết nhé..." required></textarea>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-pill">
+                                <i class="bi bi-send-fill me-2"></i> GỬI YÊU CẦU HỖ TRỢ
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <!-- Gọi thư viện Popup SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Kiểm tra xem có thông báo Success từ Controller gửi sang không
+        @if (TempData["Success"] != null)
+        {
+                    <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Gửi thành công!',
+                        text: '@Html.Raw(TempData["Success"])',
+                        confirmButtonColor: '#0d6efd',
+                        confirmButtonText: 'Đóng'
+                    });
+                    </text>
+        }
+    </script>
+}

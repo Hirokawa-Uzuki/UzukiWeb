@@ -1,0 +1,183 @@
+﻿@model IEnumerable<UzukiWeb.Models.Truyen>
+
+@{
+    ViewData["Title"] = "Kho Manga";
+}
+
+<main class="container main-content pb-5" style="min-height: 80vh; padding-top: 110px;">
+
+    @if (ViewBag.FeaturedManga != null)
+    {
+        var fm = (UzukiWeb.Models.Truyen)ViewBag.FeaturedManga;
+        <div class="featured-manga-banner mb-5">
+            <!-- Ảnh nền mờ phía sau -->
+            <img src="~/images/@fm.AnhBia" class="featured-manga-bg" alt="BG Manga">
+
+            <div class="featured-manga-content">
+                <!-- Ảnh bìa truyện -->
+                <img src="~/images/@fm.AnhBia" class="rounded-3 shadow-lg" style="width: 180px; height: 270px; object-fit: cover;" alt="Cover">
+
+                <div class="text-white">
+                    <span class="badge bg-danger mb-2 px-3 py-2"><i class="bi bi-fire"></i> TIÊU ĐIỂM TUẦN</span>
+                    <!-- Tên truyện thật -->
+                    <h2 class="fw-black mb-2" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">@fm.TenTruyen</h2>
+                    <!-- Mô tả thật -->
+                    <p class="text-light opacity-75 mb-3 text-truncate-2" style="max-width: 500px;">@fm.MoTa</p>
+
+                    <div class="d-flex gap-3">
+                        <a href="/Home/Detail/@fm.Id" class="btn btn-primary rounded-pill fw-bold px-4 py-2"><i class="bi bi-book-half me-1"></i> Đọc Ngay</a>
+                        <!--<a href="#" class="btn btn-outline-light rounded-pill fw-bold px-4 py-2"><i class="bi bi-bookmark-plus me-1"></i> Lưu Lại</a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Nếu không có truyện tiêu điểm thì hiện cái ảnh Banner mặc định hoặc ẩn đi -->
+        <div class="mb-4"></div>
+    }
+
+    <div class="d-flex align-items-center mb-4 gap-3 flex-wrap flex-md-nowrap">
+        <h4 class="fw-black m-0 flex-shrink-0" style="color: #000066;">
+            <i class="bi bi-book-half text-info me-2"></i>KHO MANGA
+        </h4>
+
+        <div class="filter-tags-scroll flex-grow-1">
+            <a href="/Home/Manga?sortBy=@ViewBag.CurrentSort&keyword=@ViewBag.Keyword"
+               class="filter-tag @(ViewBag.CurrentGenre == null ? "active" : "")">Tất cả</a>
+
+            @if (ViewBag.ListTheLoai != null)
+            {
+                foreach (var genre in ViewBag.ListTheLoai)
+                {
+                    <a href="/Home/Manga?genreId=@genre.Id&sortBy=@ViewBag.CurrentSort&keyword=@ViewBag.Keyword"
+                       class="filter-tag @(ViewBag.CurrentGenre == genre.Id ? "active" : "")">@genre.TenTheLoai</a>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-light">
+        <span class="text-muted fw-bold">
+            Hiển thị <span class="text-danger">@ViewBag.TotalItems</span> kết quả
+            @if (!string.IsNullOrEmpty(ViewBag.Keyword))
+            {
+                <span>cho: <strong class="text-dark">"@ViewBag.Keyword"</strong></span>
+            }
+        </span>
+
+        <div class="dropdown">
+            <button class="btn btn-light bg-white border-0 fw-bold text-primary shadow-sm rounded-pill px-3 py-2 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                @if (ViewBag.CurrentSort == "view")
+                {
+                    <span><i class="bi bi-fire me-1"></i> Xem nhiều nhất</span>
+                }
+                else if (ViewBag.CurrentSort == "rating")
+                {
+
+                    <span><i class="bi bi-star me-1"></i> Đánh giá cao</span>
+                }
+                else if (ViewBag.CurrentSort == "name")
+                {
+
+                    <span><i class="bi bi-sort-alpha-down me-1"></i> Tên A-Z</span>
+                }
+                else
+                {
+
+                    <span><i class="bi bi-sort-down me-1"></i> Mới cập nhật</span>
+                }
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-2">
+                <li>
+                    <a class="dropdown-item rounded-3 mb-1 @(ViewBag.CurrentSort == "new" || ViewBag.CurrentSort == null ? "active" : "")"
+                       href="/Home/Manga?sortBy=new&genreId=@ViewBag.CurrentGenre&keyword=@ViewBag.Keyword"><i class="bi bi-clock-history me-2"></i> Mới cập nhật</a>
+                </li>
+                <li>
+                    <a class="dropdown-item rounded-3 mb-1 @(ViewBag.CurrentSort == "view" ? "active" : "")"
+                       href="/Home/Manga?sortBy=view&genreId=@ViewBag.CurrentGenre&keyword=@ViewBag.Keyword"><i class="bi bi-fire me-2"></i> Xem nhiều nhất</a>
+                </li>
+                <li>
+                    <a class="dropdown-item rounded-3 mb-1 @(ViewBag.CurrentSort == "rating" ? "active" : "")"
+                       href="/Home/Manga?sortBy=rating&genreId=@ViewBag.CurrentGenre&keyword=@ViewBag.Keyword"><i class="bi bi-star me-2"></i> Đánh giá cao</a>
+                </li>
+                <li><hr class="dropdown-divider opacity-25"></li>
+                <li>
+                    <a class="dropdown-item rounded-3 @(ViewBag.CurrentSort == "name" ? "active" : "")"
+                       href="/Home/Manga?sortBy=name&genreId=@ViewBag.CurrentGenre&keyword=@ViewBag.Keyword"><i class="bi bi-sort-alpha-down me-2"></i> Tên A - Z</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row g-3 g-md-4 mb-5">
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-emoji-frown text-muted" style="font-size: 3rem;"></i>
+                <h5 class="text-muted mt-3">Không tìm thấy bộ truyện nào.</h5>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-6 col-md-3 col-lg-2">
+                    <a href="/Home/Detail/@item.Id" class="text-decoration-none">
+                        <div class="comic-card h-100 d-flex flex-column">
+                            @if (item.GiaCoin == 0)
+                            {
+                                <span class="badge badge-free position-absolute top-0 end-0 m-2 shadow-sm" style="font-size: 0.75rem; z-index: 3;">FREE</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-vip position-absolute top-0 end-0 m-2 shadow-sm" style="font-size: 0.75rem; z-index: 3;">VIP</span>
+                            }
+
+                            <img src="~/images/@item.AnhBia" class="comic-cover" alt="@item.TenTruyen">
+
+                            <div class="comic-info p-2 flex-grow-1 d-flex flex-column text-center">
+                                <div class="comic-title" style="font-size: 0.95rem;">@item.TenTruyen</div>
+
+                                @{
+                                    var chuongMoi = item.Chuongs?.OrderByDescending(c => c.SoThuTu).FirstOrDefault();
+                                    string tenChuong = chuongMoi != null ? chuongMoi.TenChuong : "Đang cập nhật";
+                                }
+                                <div class="mt-auto text-muted small text-truncate" title="@tenChuong">@tenChuong</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+    </div>
+
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="d-flex justify-content-center mt-4">
+            <nav>
+                <ul class="pagination pagination-lg border-0 shadow-sm rounded-pill overflow-hidden">
+                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link border-0 text-dark"
+                           href="/Home/Manga?page=@(ViewBag.CurrentPage - 1)&genreId=@ViewBag.CurrentGenre&sortBy=@ViewBag.CurrentSort&keyword=@ViewBag.Keyword">&laquo;</a>
+                    </li>
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link border-0 @(i == ViewBag.CurrentPage ? "fw-bold bg-info text-dark" : "text-dark")"
+                               href="/Home/Manga?page=@i&genreId=@ViewBag.CurrentGenre&sortBy=@ViewBag.CurrentSort&keyword=@ViewBag.Keyword">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link border-0 text-dark"
+                           href="/Home/Manga?page=@(ViewBag.CurrentPage + 1)&genreId=@ViewBag.CurrentGenre&sortBy=@ViewBag.CurrentSort&keyword=@ViewBag.Keyword">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</main>

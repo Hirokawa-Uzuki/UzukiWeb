@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+@using Microsoft.AspNetCore.Http
+@using UzukiWeb.Helpers
+@using UzukiWeb.Models
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - UZUKI Comic</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/Comicweb.css" />
+    <link rel="stylesheet" href="~/css/header.css">
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+    <div class="main-deco-background" id="parallax-bg">
+        <picture>
+            <source srcset="~/images/bg-deco-pc.png" media="(min-width: 768px)" />
+            <img src="~/images/bg-deco-sp.jpg" alt="Trang trí nền">
+        </picture>
+    </div>
+
+    <header class="uzuki-header fixed-top bg-white shadow-sm" id="main-header">
+        <div class="container d-flex align-items-center justify-content-between h-100">
+            <a class="navbar-brand fw-black m-0 flex-shrink-0" href="/">UZUKI<span class="text-warning">.</span></a>
+
+            <nav class="d-none d-lg-flex uzuki-nav mx-3">
+                <!-- Khai báo biến lấy tên Trang hiện tại -->
+                @{
+                    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                }
+
+                <!-- TRANG CHỦ -->
+                <a href="/" class="nav-item-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">Trang Chủ</a>
+
+                <!-- KHÁM PHÁ -->
+                <div class="nav-item-dropdown">
+                    <a href="/Home/Ranking" class="nav-item-link @(currentController == "Home" && (currentAction == "Manga" || currentAction == "Manhwa" || currentAction == "LightNovel" || currentAction == "Ranking" || currentAction == "Recommend" || currentAction == "HotSale") ? "active" : "")">Khám Phá <i class="bi bi-chevron-down ms-1" style="font-size: 0.8em;"></i></a>
+                    <div class="dropdown-menu-custom shadow-lg">
+                        <a href="/Home/Recommend"><i class="bi bi-star-fill text-warning"></i> Góc Đề Cử</a>
+                        <a href="/Home/HotSale"><i class="bi bi-tags-fill text-danger"></i> Đang Khuyến Mãi</a>
+                        <a href="/Home/Ranking"><i class="bi bi-trophy text-warning"></i> Bảng Xếp Hạng</a>
+                        <div class="divider"></div>
+                        <a href="/Home/Manga"><i class="bi bi-book text-info"></i> Manga</a>
+                        <a href="/Home/Manhwa"><i class="bi bi-phone text-success"></i> Webtoon/Manhwa</a>
+                        <a href="/Home/LightNovel"><i class="bi bi-journal-text text-primary"></i> Light Novel</a>
+                    </div>
+                </div>
+
+                <!-- PREMIUM -->
+                <a href="/Home/Premium" class="nav-item-link vip-link @(currentController == "Home" && currentAction == "Premium" ? "active" : "")">💎 PREMIUM</a>
+
+                <!-- SHOP SÁCH -->
+                <a href="/Home/Shop" class="nav-item-link @(currentController == "Home" && currentAction == "Shop" ? "active" : "")">🛒 Shop Sách</a>
+            </nav>
+
+            <div class="header-actions d-flex align-items-center gap-2 gap-md-3 flex-shrink-0">
+                <form action="/Home/Search" method="get" class="search-wrapper d-none d-lg-block m-0">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" name="keyword" value="@ViewBag.Keyword" class="search-input-sleek" placeholder="Tìm truyện...">
+                    <button type="submit" class="d-none"></button>
+                </form>
+
+                @{
+                    var cartList = Context.Session.Get<List<CartItem>>("GioHang");
+                    int totalCartItems = cartList != null ? cartList.Sum(c => c.SoLuong) : 0;
+                }
+                <a href="/Home/Cart" class="position-relative text-dark d-inline-block me-3 mt-1 transition-hover">
+                    <i class="bi bi-cart3 fs-4"></i>
+                    @if (totalCartItems > 0)
+                    {
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-2 border-white shadow-sm" style="font-size: 0.65rem; padding: 0.35em 0.5em;">
+                            @totalCartItems
+                        </span>
+                    }
+                </a>
+
+                @if (User.Identity!.IsAuthenticated)
+                {
+                    <div class="dropdown d-none d-lg-block">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                            <img src="https://placehold.co/40x40/00aaff/fff?text=U" class="rounded-circle me-2 border border-2 border-primary shadow-sm" alt="Avatar">
+                            <div class="text-dark text-start">
+                                <div class="fw-bold text-truncate" style="font-size: 0.9rem; line-height: 1; max-width: 100px;">@User.Identity.Name</div>
+                                <div class="text-danger fw-black" style="font-size: 0.8rem;">💎 @User.FindFirst("Coin")?.Value Coin</div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-3 p-2">
+                            <li><a class="dropdown-item rounded-3 mb-1 fw-bold" href="/Account/Profile"><i class="bi bi-person-circle me-2 text-primary"></i> Trang cá nhân</a></li>
+                            <li><a class="dropdown-item rounded-3 mb-1 fw-bold" href="/Account/Profile"><i class="bi bi-wallet2 me-2 text-warning"></i> Nạp Coin</a></li>
+                            <li><hr class="dropdown-divider opacity-25"></li>
+                            <li><a class="dropdown-item rounded-3 text-danger fw-bold" href="/Account/Logout"><i class="bi bi-box-arrow-right me-2"></i> Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn btn-primary btn-sm rounded-pill fw-bold px-4 py-2 shadow-sm d-none d-lg-block">Đăng nhập</a>
+                }
+
+                <button class="btn border-0 fs-4 text-dark menu-toggle-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#uzukiOffcanvas">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="offcanvas offcanvas-end uzuki-offcanvas" tabindex="-1" id="uzukiOffcanvas">
+        <div class="offcanvas-header border-bottom border-light">
+            <h5 class="offcanvas-title fw-black" style="color: #000066; letter-spacing: 1px;">MENU<span class="text-warning">.</span></h5>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-panel-offcanvas mb-4 p-4 rounded-4 text-center shadow-sm">
+                @if (User.Identity!.IsAuthenticated)
+                {
+                    <img src="https://placehold.co/70x70/00aaff/fff?text=U" class="rounded-circle mb-3 border border-3 border-primary shadow-sm" alt="Avatar">
+                    <h6 class="fw-black mb-1 text-primary fs-5">@User.Identity.Name</h6>
+                    <div class="badge bg-warning text-dark px-3 py-2 rounded-pill mb-3 fs-6 shadow-sm">💎 @User.FindFirst("Coin")?.Value Coin</div>
+
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="/Account/Profile" class="btn btn-primary btn-sm rounded-pill fw-bold w-50 shadow-sm">Cá Nhân</a>
+                        <a href="/Account/Logout" class="btn btn-outline-danger btn-sm rounded-pill fw-bold w-50">Đăng Xuất</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="avatar-placeholder mx-auto mb-3 d-flex align-items-center justify-content-center bg-white text-primary rounded-circle shadow-sm" style="width: 70px; height: 70px; font-size: 2rem;">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1">Khách truy cập</h6>
+                    <div class="d-flex gap-2 justify-content-center mt-3">
+                        <a href="/Account/Login" class="btn btn-outline-primary btn-sm rounded-pill fw-bold w-50">Đăng Nhập</a>
+                        <a href="/Account/Register" class="btn btn-primary btn-sm rounded-pill fw-bold w-50 shadow-sm">Đăng Ký</a>
+                    </div>
+                }
+            </div>
+
+            <div class="d-flex flex-column gap-2 menu-links-offcanvas">
+                <a href="/" class="active"><i class="bi bi-house-door me-3 text-primary"></i> Trang Chủ</a>
+                <hr class="text-muted opacity-25 my-1">
+                <a href="/Home/Recommend"><i class="bi bi-star-fill me-3 text-warning"></i> Góc Đề Cử</a>
+                <a href="/Home/HotSale"><i class="bi bi-tags-fill me-3 text-danger"></i> Đang Khuyến Mãi</a>
+                <a href="/Home/Ranking"><i class="bi bi-trophy me-3 text-warning"></i> Bảng Xếp Hạng</a>
+                <hr class="text-muted opacity-25 my-1">
+                <a href="/Home/Manga"><i class="bi bi-book me-3 text-info"></i> Truyện Manga</a>
+                <a href="/Home/Manhwa"><i class="bi bi-phone me-3 text-success"></i> Webtoon / Manhwa</a>
+                <a href="/Home/LightNovel"><i class="bi bi-journal-text me-3 text-primary"></i> Đọc Light Novel</a>
+                <hr class="text-muted opacity-25 my-1">
+                <a href="/Home/Premium"><i class="bi bi-gem me-3 text-warning"></i> Nạp Coin / Premium</a>
+                <a href="/Home/Shop"><i class="bi bi-bag-heart me-3 text-success"></i> Mua sắm (Shop)</a>
+            </div>
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <footer class="uzuki-footer">
+        <div class="uzuki-bar">
+            <div class="uzuki-text-wrap">
+                <span>UZUKI</span><span>UZUKI</span><span>UZUKI</span><span>UZUKI</span><span>UZUKI</span><span>UZUKI</span><span>UZUKI</span><span>UZUKI</span><span>UZUKI</span><span>UZUKI</span>
+            </div>
+        </div>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>HỆ THỐNG TRUYỆN & SHOP</h2>
+                <p>Khám phá thế giới truyện tranh bản quyền.<br />Mua sắm Light Novel, Manga vật lý và Merch độc quyền.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-column">
+                    <a href="/">TRANG CHỦ</a>
+                    <a href="/Home/Manga">ĐỌC TRUYỆN</a>
+                    <a href="/Home/Shop">MUA SÁCH (SHOP)</a>
+                </div>
+                <div class="link-column">
+                    <a href="/Home/Premium">NẠP COIN</a>
+                    <a href="/Home/Cart">GIỎ HÀNG</a>
+                    <a href="/Home/Contact">HỖ TRỢ / LIÊN HỆ</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 - Bản quyền thuộc về Uzuki
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/header.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

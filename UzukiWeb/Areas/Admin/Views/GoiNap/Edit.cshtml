@@ -1,0 +1,65 @@
+﻿@model UzukiWeb.Models.GoiNap
+@{
+    ViewData["Title"] = "Sửa Gói Nạp";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0 rounded-4 w-50 mx-auto mt-4">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0 text-center">
+        <h4 class="fw-bold text-primary"><i class="bi bi-pencil-square"></i> CẬP NHẬT GÓI NẠP</h4>
+    </div>
+    <div class="card-body p-4">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <!-- RẤT QUAN TRỌNG: Phải có thẻ hidden này để hệ thống biết đang sửa Gói nào -->
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tên Gói (VD: Gói Khởi Đầu) <span class="text-danger">*</span></label>
+                <input asp-for="TenGoi" class="form-control" required />
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-primary">Số Coin Nhận <span class="text-danger">*</span></label>
+                    <input asp-for="Coin" type="number" class="form-control fw-bold text-primary" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-success">Giá Tiền (VNĐ) <span class="text-danger">*</span></label>
+                    <input asp-for="Gia" type="number" class="form-control fw-bold text-success" required />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Tải ảnh bìa mới lên</label>
+                    <!-- Dùng name="AnhUpload" để hứng file bên Controller -->
+                    <input type="file" name="AnhUpload" class="form-control" accept="image/*" />
+                    <small class="text-muted">Bỏ trống nếu muốn giữ nguyên ảnh cũ.</small>
+
+                    <!-- Hiển thị ảnh hiện tại -->
+                    @if (!string.IsNullOrEmpty(Model.Anh))
+                    {
+                        <div class="mt-2">
+                            <img src="~/images/@Model.Anh" style="width: 100px; height: 100px; object-fit: contain;" class="border rounded" />
+                            <input type="hidden" asp-for="Anh" /> <!-- Giữ lại tên ảnh cũ nếu không up ảnh mới -->
+                        </div>
+                    }
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-danger">Tag (VD: HOT, NEW)</label>
+                    <input asp-for="Tag" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Mô tả ưu đãi</label>
+                <textarea asp-for="MoTa" class="form-control" rows="2" placeholder="Nhận ngay 176 Coin..."></textarea>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-save"></i> LƯU THAY ĐỔI</button>
+                <a asp-action="Index" class="btn btn-light text-secondary border">Hủy, Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>

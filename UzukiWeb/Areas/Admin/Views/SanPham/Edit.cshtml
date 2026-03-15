@@ -1,0 +1,35 @@
+﻿@model UzukiWeb.Models.SanPham
+@{
+    ViewData["Title"] = "Sửa Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="fw-bold text-warning mb-4"><i class="bi bi-pencil-square"></i> SỬA SẢN PHẨM</h3>
+<div class="card shadow-sm border-0 p-4">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="AnhBia" /> <!-- Giữ lại tên ảnh cũ -->
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên Sản Phẩm</label>
+                    <input asp-for="TenSanPham" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Giá Bán (VNĐ)</label>
+                    <input asp-for="Gia" type="number" class="form-control text-danger fw-bold" required />
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <label class="form-label fw-bold d-block">Ảnh Hiện Tại</label>
+                <img src="~/images/@Model.AnhBia" style="width: 150px; border-radius: 10px; margin-bottom: 10px;" />
+                <input type="file" name="AnhBiaFile" class="form-control form-control-sm" accept="image/*" />
+                <small class="text-muted">(Bỏ trống nếu không muốn đổi ảnh)</small>
+            </div>
+        </div>
+        <hr />
+        <button type="submit" class="btn btn-warning px-5 fw-bold"><i class="bi bi-save"></i> CẬP NHẬT</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy bỏ</a>
+    </form>
+</div>

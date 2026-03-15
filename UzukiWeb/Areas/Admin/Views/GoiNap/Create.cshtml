@@ -1,0 +1,50 @@
+﻿@model UzukiWeb.Models.GoiNap
+@{
+    ViewData["Title"] = "Thêm Gói Nạp";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0 rounded-4 w-50 mx-auto mt-4">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0 text-center">
+        <h4 class="fw-bold text-success"><i class="bi bi-plus-circle-fill"></i> THÊM GÓI NẠP MỚI</h4>
+    </div>
+    <div class="card-body p-4">
+        <!-- ĐÃ THÊM enctype ĐỂ CHO PHÉP UPLOAD FILE -->
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tên Gói (VD: Gói Khởi Đầu) <span class="text-danger">*</span></label>
+                <input asp-for="TenGoi" class="form-control" required />
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-primary">Số Coin Nhận <span class="text-danger">*</span></label>
+                    <input asp-for="Coin" type="number" class="form-control fw-bold text-primary" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-success">Giá Tiền (VNĐ) <span class="text-danger">*</span></label>
+                    <input asp-for="Gia" type="number" class="form-control fw-bold text-success" required />
+                </div>
+            </div>
+            <div class="row">
+                <!-- NÚT UPLOAD ẢNH NẰM Ở ĐÂY -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Tải ảnh bìa lên</label>
+                    <input type="file" name="AnhUpload" class="form-control" accept="image/*" />
+                    <small class="text-muted">Định dạng .png, .jpg (Để trống nếu không có)</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-danger">Tag (VD: HOT, NEW)</label>
+                    <input asp-for="Tag" class="form-control" />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold">Mô tả ưu đãi</label>
+                <textarea asp-for="MoTa" class="form-control" rows="2" placeholder="Nhận ngay 176 Coin..."></textarea>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-save"></i> LƯU GÓI NẠP</button>
+                <a asp-action="Index" class="btn btn-light text-secondary border">Hủy, Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>

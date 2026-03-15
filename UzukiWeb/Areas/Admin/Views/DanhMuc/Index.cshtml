@@ -1,0 +1,55 @@
+﻿@model IEnumerable<UzukiWeb.Models.DanhMuc>
+@{
+    ViewData["Title"] = "Quản Lý Danh Mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid p-4">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold m-0"><i class="bi bi-tags-fill text-primary me-2"></i> Tất Cả Danh Mục</h4>
+                <a asp-action="Create" class="btn btn-success fw-bold rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Thêm Danh Mục Mới
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width: 80px;">ID</th>
+                            <th>Tên Danh Mục</th>
+                            <th class="text-center" style="width: 150px;">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center fw-bold">@item.Id</td>
+                                <td class="fw-bold text-primary">@item.TenDanhMuc</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-3">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

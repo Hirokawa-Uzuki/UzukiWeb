@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Nạp Premium Coin";
+}
+
+<main class="container pb-5" style="margin-top: 110px; min-height: 80vh;">
+    <div class="d-flex align-items-center mb-4 border-bottom pb-2">
+        <h3 class="fw-black m-0" style="color: #000066;"><i class="bi bi-shop text-primary me-3"></i> CỬA HÀNG PREMIUM</h3>
+    </div>
+
+    <ul class="nav nav-pills mb-4 nav-fill gap-2" id="storeTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link bg-light text-dark fw-bold border" data-bs-toggle="pill" href="#">Gói Ưu Đãi (Sale)</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active fw-bold shadow-sm" style="background-color: #00aaff;" data-bs-toggle="pill" href="#">Nạp Coin Cơ Bản</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link bg-light text-dark fw-bold border" data-bs-toggle="pill" href="#">Thẻ Tháng / Pass</a>
+        </li>
+    </ul>
+
+    <div class="row g-4 mb-5">
+        @foreach (var goi in ViewBag.CacGoiNap)
+        {
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 border-2 rounded-4 shadow-sm" style="border-color: #d0e8f2;">
+                    <div class="card-header bg-light border-bottom-0 text-center pt-3 rounded-top-4 position-relative">
+                        <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">@goi.TenGoi</h6>
+                        @if (goi.Tag == "NEW")
+                        {
+                            <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 shadow-sm">NEW</span>
+                        }
+                        @if (goi.Tag == "HOT")
+                        {
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-2 shadow-sm shake-anim">HOT</span>
+                        }
+                    </div>
+
+                    <div class="card-body text-center p-3 d-flex align-items-center justify-content-center" style="height: 180px; background: linear-gradient(to bottom, #f0f8ff, #ffffff);">
+                        <img src="~/images/@goi.Anh" class="img-fluid" style="max-height: 100%; object-fit: contain;" alt="@goi.TenGoi">
+                    </div>
+
+                    <div class="card-footer bg-white border-top-0 p-3 text-center rounded-bottom-4">
+                        <p class="small text-muted mb-2">Mua được 1 lần / Tháng</p>
+                        <button onclick="openConfirmModal(@goi.Id, '@goi.TenGoi', @goi.Coin, @goi.Gia, '@goi.MoTa', '@goi.Anh')"
+                                class="btn w-100 fw-black fs-5 text-white"
+                                style="background-color: #00aaff; border-bottom: 4px solid #0077b3;">
+                            VND @goi.Gia.ToString("N0")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+
+<div class="modal fade" id="confirmPurchaseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+
+            <div class="modal-header text-center" style="background-color: #f0f4f8; border-bottom: 3px solid #00aaff;">
+                <h5 class="modal-title w-100 fw-black text-dark">Bạn có muốn mua sản phẩm này?</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4 bg-white">
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <div class="border rounded-3 bg-light p-2 h-100 d-flex align-items-center justify-content-center">
+                            <img id="modalImg" src="https://placehold.co/100x100" class="img-fluid" style="object-fit: contain;">
+                        </div>
+                    </div>
+
+                    <div class="col-8">
+                        <h6 id="modalPackageName" class="fw-bold text-primary mb-2">Tên gói nạp</h6>
+                        <p id="modalPackageDesc" class="small text-muted mb-3" style="line-height: 1.4;">Mô tả gói nạp</p>
+
+                        <div class="bg-light border rounded-3 overflow-hidden">
+                            <div class="bg-primary text-white text-center small fw-bold py-1">Vật phẩm nhận được</div>
+                            <div class="d-flex justify-content-center gap-3 p-3">
+                                <div class="text-center">
+                                    <img src="https://placehold.co/40x40/00aaff/fff?text=C" class="rounded-circle shadow-sm mb-1">
+                                    <div class="fw-bold text-dark small" id="modalCoinAmount">x0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4 bg-light p-3 rounded-3 border">
+                    <span class="fw-bold text-muted">Giá tiền phải thanh toán</span>
+                    <span class="fw-black fs-4 text-dark" id="modalPrice">VND 0</span>
+                </div>
+            </div>
+
+            <div class="modal-footer bg-light border-top-0 d-flex justify-content-between p-3 rounded-bottom-4">
+                <form asp-action="Checkout" method="post" class="w-100 d-flex gap-2">
+                    <input type="hidden" id="formPackageId" name="packageId" />
+                    <input type="hidden" id="formPackageName" name="packageName" />
+                    <input type="hidden" id="formCoin" name="coinAmount" />
+                    <input type="hidden" id="formPrice" name="price" />
+
+                    <button type="button" class="btn btn-light border fw-bold w-50 py-2" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-warning text-dark fw-black w-50 py-2 shadow-sm" id="btnConfirmBuy">Xác nhận</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Đã thêm biến "image" vào cuối tham số của hàm
+        function openConfirmModal(id, name, coin, price, desc, image) {
+
+            // Nếu khách chưa đăng nhập, đá thẳng ra trang Đăng nhập
+            var isAuth = '@User.Identity?.IsAuthenticated' === 'True';
+            if (!isAuth) {
+                window.location.href = '/Account/Login';
+                return;
+            }
+
+            // Đổ dữ liệu text lên Modal
+            document.getElementById('modalPackageName').innerText = name;
+            document.getElementById('modalPackageDesc').innerText = desc;
+            document.getElementById('modalCoinAmount').innerText = 'x' + coin.toLocaleString();
+            document.getElementById('modalPrice').innerText = 'VND ' + price.toLocaleString();
+
+            // CẬP NHẬT ẢNH
+            // Nếu có ảnh thì ghép đường dẫn, nếu trống thì dùng ảnh mặc định
+            if (image && image !== '') {
+                document.getElementById('modalImg').src = '/images/' + image;
+            } else {
+                document.getElementById('modalImg').src = '/images/pack_default.png';
+            }
+
+            // Đổ dữ liệu ngầm vào Form để đẩy sang Controller Checkout
+            document.getElementById('formPackageId').value = id;
+            document.getElementById('formPackageName').value = name;
+            document.getElementById('formCoin').value = coin;
+            document.getElementById('formPrice').value = price;
+
+            // Bật Modal lên
+            var myModal = new bootstrap.Modal(document.getElementById('confirmPurchaseModal'));
+            myModal.show();
+        }
+    </script>
+}

@@ -1,0 +1,124 @@
+﻿@model UzukiWeb.Models.Truyen
+@{
+    ViewData["Title"] = "Sửa Thông Tin Truyện";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="fw-bold m-0"><i class="bi bi-pencil-square text-warning me-2"></i> Chỉnh Sửa Truyện</h3>
+        <a href="/Admin/Truyen/Index" class="btn btn-outline-secondary rounded-pill fw-bold"><i class="bi bi-arrow-left"></i> Quay lại</a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row g-4">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên Truyện <span class="text-danger">*</span></label>
+                            <input asp-for="TenTruyen" class="form-control" required />
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Tác Giả</label>
+                                <input asp-for="TacGia" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Danh Mục <span class="text-danger">*</span></label>
+                                <select asp-for="DanhMucId" class="form-select" asp-items="ViewBag.DanhMucId"></select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mô tả ngắn</label>
+                            <textarea asp-for="MoTa" class="form-control" rows="6"></textarea>
+                        </div>
+                        <div class="mb-3 mt-4">
+                            <label class="form-label fw-black text-primary"><i class="bi bi-tags-fill me-2"></i>Phân loại Thể Loại (Có thể chọn nhiều)</label>
+                            <div class="row border border-primary border-opacity-25 rounded-3 p-3 bg-light shadow-sm">
+                                @{
+                                    // Ép kiểu ViewBag để xài
+                                    var allTheLoai = ViewBag.AllTheLoai as List<UzukiWeb.Models.TheLoai>;
+                                    // Lấy ra danh sách các ID Thể loại mà truyện này đang sở hữu
+                                    var currentTheLoaiIds = Model.TheLoais?.Select(t => t.Id).ToList() ?? new List<int>();
+                                }
+
+                                @if (allTheLoai != null)
+                                {
+                                    @foreach (var tl in allTheLoai)
+                                    {
+                                        // Kiểm tra xem ID thể loại này có nằm trong danh sách truyện đang có không
+                                        bool isChecked = currentTheLoaiIds.Contains(tl.Id);
+
+                                        <div class="col-md-4 mb-2">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" name="selectedGenres" value="@tl.Id" id="genre_@tl.Id" @(isChecked ? "checked" : "")>
+                                                <label class="form-check-label fw-bold text-dark" for="genre_@tl.Id">
+                                                    @tl.TenTheLoai
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 border-start">
+
+                        <div class="mb-4 text-center">
+                            <label class="form-label fw-bold d-block">Ảnh bìa hiện tại</label>
+                            <img src="~/images/@Model.AnhBia" class="rounded-3 shadow-sm border" style="width: 120px; height: 180px; object-fit: cover;" alt="Bìa truyện" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-primary">Tải ảnh bìa mới lên</label>
+                            <input type="file" name="AnhBiaFile" class="form-control" accept="image/*" />
+                            <div class="form-text text-muted small">Bỏ trống nếu muốn giữ nguyên ảnh cũ.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-danger"><i class="bi bi-eye-fill"></i> Buff Lượt Xem (Seeding)</label>
+                            <input asp-for="LuotXem" class="form-control fw-bold text-primary" type="number" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-warning">Giá Mở Khóa (Coin)</label>
+                            <input asp-for="GiaCoin" type="number" class="form-control fw-bold" min="0" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Trạng Thái</label>
+                            <select asp-for="TrangThai" class="form-select">
+                                <option value="Đang tiến hành">Đang tiến hành</option>
+                                <option value="Đã hoàn thành">Đã hoàn thành</option>
+                                <option value="Tạm ngưng">Tạm ngưng</option>
+                            </select>
+                            <div class="form-check form-switch mb-2 mt-4">
+                                <input class="form-check-input" type="checkbox" asp-for="IsRecommend">
+                                <label class="form-check-label fw-bold text-success">Lên Góc Đề Cử</label>
+                            </div>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" asp-for="IsHotSale">
+                                <label class="form-check-label fw-bold text-danger">Đưa vào Hot Sale</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-danger">% Giảm Giá (Nếu có)</label>
+                                <input asp-for="PhanTramGiam" type="number" class="form-control fw-bold" min="0" max="100" />
+                                <div class="form-text">Ví dụ: Nhập 50 để giảm 50% giá trị các chương.</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm mt-3">
+                            <i class="bi bi-save me-1"></i> LƯU THAY ĐỔI
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@model UzukiWeb.Models.Banner
+@{
+    ViewData["Title"] = "Thêm Banner";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0 rounded-4 w-50 mx-auto mt-4">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0 text-center">
+        <h4 class="fw-bold text-success"><i class="bi bi-images"></i> THÊM BANNER MỚI</h4>
+    </div>
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tải ảnh Banner lên <span class="text-danger">*</span></label>
+                <input type="file" name="AnhUpload" class="form-control" accept="image/*" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Vị trí hiển thị <span class="text-danger">*</span></label>
+                <select asp-for="ViTri" class="form-select" required>
+                    <option value="Slide">Trượt (Slide chính)</option>
+                    <option value="KhuyenMai">Banner nổi (Bên trái)</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Đường dẫn khi Click (Link)</label>
+                <input asp-for="Link" class="form-control" placeholder="Ví dụ: /Home/Premium hoặc /Home/Detail/1" />
+                <small class="text-muted">Bỏ trống nếu không muốn click chuyển trang</small>
+            </div>
+
+            <div class="mb-4 form-check form-switch">
+                <input class="form-check-input" type="checkbox" asp-for="TrangThai" checked>
+                <label class="form-check-label fw-bold text-success" for="TrangThai">Hiển thị Banner này ngay lập tức</label>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success fw-bold"><i class="bi bi-save"></i> LƯU BANNER</button>
+                <a asp-action="Index" class="btn btn-light text-secondary border">Hủy, Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>

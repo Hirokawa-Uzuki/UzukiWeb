@@ -1,0 +1,58 @@
+﻿@model IEnumerable<UzukiWeb.Models.GoiNap>
+@{
+    ViewData["Title"] = "Quản Lý Gói Nạp";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0 rounded-4 w-100 mx-auto mt-4">
+    <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+        <h4 class="fw-bold text-primary mb-0"><i class="bi bi-wallet-fill text-warning"></i> QUẢN LÝ GÓI NẠP (PREMIUM)</h4>
+        <a asp-action="Create" class="btn btn-success fw-bold rounded-pill shadow-sm"><i class="bi bi-plus-lg"></i> Thêm Gói Mới</a>
+    </div>
+    <div class="card-body p-4">
+        <table class="table table-hover align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>STT</th>
+                    <th>Hình Ảnh</th>
+                    <th class="text-start">Tên Gói</th>
+                    <th>Số Coin Nhận</th>
+                    <th>Giá Tiền</th>
+                    <th>Tag</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="7" class="text-muted py-4">Chưa có gói nạp nào. Hãy thêm mới!</td></tr>
+                }
+                @{
+                    int stt = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-bold text-muted">@(stt++)</td>
+                        <td>
+                            <img src="~/images/@item.Anh" alt="Ảnh gói nạp" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: contain; background: #f8f9fa; padding: 5px;">
+                        </td>
+                        <td class="text-start fw-bold text-dark">@item.TenGoi <br /><small class="text-muted fw-normal">@item.MoTa</small></td>
+                        <td class="text-danger fw-bold fs-5">+@String.Format("{0:N0}", item.Coin) <i class="bi bi-gem"></i></td>
+                        <td class="text-success fw-bold fs-5">@String.Format("{0:N0}", item.Gia) đ</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Tag))
+                            {
+                                <span class="badge bg-danger rounded-pill px-3 shake-anim">@item.Tag</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="bi bi-pencil-square"></i> Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

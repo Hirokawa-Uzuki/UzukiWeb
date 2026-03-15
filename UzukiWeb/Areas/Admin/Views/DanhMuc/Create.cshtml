@@ -1,0 +1,26 @@
+﻿@model UzukiWeb.Models.DanhMuc
+@{
+    ViewData["Title"] = "Thêm Danh Mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="fw-bold m-0"><i class="bi bi-plus-circle-fill text-primary me-2"></i> Thêm Danh Mục</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill fw-bold"><i class="bi bi-arrow-left"></i> Quay lại</a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 col-md-6">
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Tên Danh Mục <span class="text-danger">*</span></label>
+                    <input asp-for="TenDanhMuc" class="form-control" required placeholder="Nhập tên (Manga, Manhwa...)" />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm">
+                    <i class="bi bi-save me-1"></i> LƯU DANH MỤC
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

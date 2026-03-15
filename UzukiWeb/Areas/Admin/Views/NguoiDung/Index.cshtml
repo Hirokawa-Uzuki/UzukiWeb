@@ -1,0 +1,79 @@
+﻿@model IEnumerable<UzukiWeb.Models.TaiKhoan>
+@{
+    ViewData["Title"] = "Quản Lý Người Dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid p-4">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold m-0"><i class="bi bi-people-fill text-primary me-2"></i> Tất Cả Người Dùng</h4>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center">ID</th>
+                            <th>Tên Đăng Nhập</th>
+                            <th>Email</th>
+                            <th class="text-center">Số Coin</th>
+                            <th class="text-center">Vai Trò</th>
+                            <th class="text-center">Ngày Đăng Ký</th>
+                            <th class="text-center">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center fw-bold text-muted">@item.Id</td>
+                                <td class="fw-bold">
+                                    <img src="https://placehold.co/30x30/00aaff/fff?text=@item.TenDangNhap.Substring(0, 1).ToUpper()" class="rounded-circle me-2">
+                                    @item.TenDangNhap
+                                </td>
+                                <td>@item.Email</td>
+                                <td class="text-center fw-black text-danger">@item.SoDuCoin.ToString("N0")</td>
+                                <td class="text-center">
+                                    @if (item.VaiTro == "Admin")
+                                    {
+                                        <span class="badge bg-danger rounded-pill px-3">@item.VaiTro</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary rounded-pill px-3">Khách Hàng</span>
+                                    }
+                                </td>
+                                <td class="text-center small text-muted">@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-3">
+                                            <i class="bi bi-pencil-square"></i> Sửa
+                                        </a>
+                                        @if (User.Identity!.Name != item.TenDangNhap)
+                                        {
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Xóa tài khoản này?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-3">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

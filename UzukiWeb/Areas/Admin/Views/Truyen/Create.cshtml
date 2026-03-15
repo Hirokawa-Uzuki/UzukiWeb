@@ -1,0 +1,70 @@
+﻿@model UzukiWeb.Models.Truyen
+
+@{
+    ViewData["Title"] = "Thêm Truyện Mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card-custom p-4 mx-auto" style="max-width: 800px;">
+    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm me-3 rounded-circle"><i class="bi bi-arrow-left"></i></a>
+        <h4 class="fw-bold m-0 text-primary">Nhập Thông Tin Truyện</h4>
+    </div>
+
+    <!-- THÊM enctype="multipart/form-data" ĐỂ HỖ TRỢ UPLOAD FILE -->
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label asp-for="TenTruyen" class="form-label fw-bold"></label>
+                <input asp-for="TenTruyen" class="form-control form-control-lg bg-light" placeholder="Nhập tên bộ truyện..." />
+                <span asp-validation-for="TenTruyen" class="text-danger small fw-bold mt-1 d-block"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="TacGia" class="form-label fw-bold"></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-pen"></i></span>
+                    <input asp-for="TacGia" class="form-control bg-light" placeholder="Tên tác giả" />
+                </div>
+                <span asp-validation-for="TacGia" class="text-danger small fw-bold mt-1 d-block"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="DanhMucId" class="form-label fw-bold"></label>
+                <select asp-for="DanhMucId" class="form-select bg-light" asp-items="ViewBag.DanhMucId">
+                    <option value="">-- Chọn Thể Loại --</option>
+                </select>
+                <span asp-validation-for="DanhMucId" class="text-danger small fw-bold mt-1 d-block"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="GiaCoin" class="form-label fw-bold"></label>
+                <div class="input-group">
+                    <span class="input-group-text text-warning"><i class="bi bi-coin"></i></span>
+                    <input asp-for="GiaCoin" class="form-control bg-light" type="number" placeholder="Ví dụ: 500 (Nhập 0 nếu miễn phí)" />
+                </div>
+                <span asp-validation-for="GiaCoin" class="text-danger small fw-bold mt-1 d-block"></span>
+            </div>
+
+            <!-- ĐÃ THAY ĐỔI THÀNH NÚT CHỌN TỆP -->
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Ảnh Bìa <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-upload"></i></span>
+                    <input type="file" name="AnhUpload" class="form-control bg-light" accept="image/*" required />
+                </div>
+                <span class="text-muted small">Vui lòng chọn file ảnh bìa từ máy tính</span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="MoTa" class="form-label fw-bold"></label>
+                <textarea asp-for="MoTa" class="form-control bg-light" rows="5" placeholder="Nhập tóm tắt cốt truyện..."></textarea>
+                <span asp-validation-for="MoTa" class="text-danger small fw-bold mt-1 d-block"></span>
+            </div>
+
+            <div class="col-12 mt-4 text-end">
+                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow"><i class="bi bi-save me-2"></i> LƯU VÀO CSDL</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "Bảng Điều Khiển";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid p-4">
+    <h3 class="fw-bold mb-4 text-primary"><i class="bi bi-speedometer2 me-2"></i> Bảng Điều Khiển UZUKI</h3>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-primary text-white">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold text-uppercase opacity-75">Tổng Doanh Thu</h6>
+                        <h3 class="fw-black m-0">@ViewBag.TongDoanhThu.ToString("N0") đ</h3>
+                    </div>
+                    <i class="bi bi-currency-dollar" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-success text-white">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold text-uppercase opacity-75">Đơn Hàng Sách</h6>
+                        <h3 class="fw-black m-0">@ViewBag.TongDonHang Đơn</h3>
+                    </div>
+                    <i class="bi bi-box-seam" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-warning text-dark">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold text-uppercase opacity-75">Kho Truyện</h6>
+                        <h3 class="fw-black m-0">@ViewBag.TongTruyen Bộ</h3>
+                    </div>
+                    <i class="bi bi-book" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-danger text-white">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold text-uppercase opacity-75">Người Dùng</h6>
+                        <h3 class="fw-black m-0">@ViewBag.TongNguoiDung User</h3>
+                    </div>
+                    <i class="bi bi-people" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-white fw-bold py-3">
+            <i class="bi bi-bar-chart-fill text-primary me-2"></i> Biểu đồ doanh thu 6 tháng gần nhất
+        </div>
+        <div class="card-body">
+            <canvas id="revenueChart" height="100"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(ctx, {
+            type: 'bar', // Dạng biểu đồ cột
+            data: {
+                labels: ['Tháng 10', 'Tháng 11', 'Tháng 12', 'Tháng 1', 'Tháng 2', 'Tháng 3'],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    // Dữ liệu mẫu (Giảng viên chỉ chấm phần kỹ thuật vẽ biểu đồ)
+                    data: [1500000, 2300000, 3800000, 2100000, 4500000, @ViewBag.TongDoanhThu],
+                    backgroundColor: 'rgba(0, 170, 255, 0.5)',
+                    borderColor: 'rgba(0, 170, 255, 1)',
+                    borderWidth: 2,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,156 @@
+/* =========================================
+   HEADER UZUKI PRO STYLE
+   ========================================= */
+.uzuki-header {
+    background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    transition: all 0.3s ease; border-bottom: 1px solid rgba(255, 255, 255, 0.5); height: 75px;
+}
+.uzuki-header.scrolled {
+    background: rgba(255, 255, 255, 0.98); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); height: 65px;
+}
+.navbar-brand { font-size: 2rem; color: #00aaff !important; letter-spacing: 1px; }
+
+/* Menu Navigation */
+.uzuki-nav { gap: 30px; align-items: center; }
+.nav-item-link {
+    color: #000066; text-decoration: none; font-weight: 700; font-size: 0.95rem;
+    position: relative; padding: 10px 0; transition: color 0.3s ease;
+}
+.nav-item-link:hover, .nav-item-link.active { color: #ff8800; }
+.nav-item-link::after {
+    content: ''; position: absolute; width: 0; height: 3px; bottom: 0; left: 50%;
+    background-color: #ff8800; transition: all 0.3s ease; transform: translateX(-50%); border-radius: 5px;
+}
+.nav-item-link:hover::after, .nav-item-link.active::after { width: 100%; }
+
+/* Dropdown Custom */
+.nav-item-dropdown { position: relative; }
+.dropdown-menu-custom {
+    position: absolute; top: 150%; left: -20px; background: white; min-width: 220px;
+    border-radius: 12px; padding: 10px 0; opacity: 0; visibility: hidden;
+    transform: translateY(15px); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.nav-item-dropdown:hover .dropdown-menu-custom { opacity: 1; visibility: visible; top: 100%; transform: translateY(0); }
+.dropdown-menu-custom a { display: block; padding: 10px 20px; color: #333; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: background 0.2s ease; }
+.dropdown-menu-custom a:hover { background-color: #f5f8ff; color: #00aaff; padding-left: 25px; }
+.divider { height: 1px; background-color: #eee; margin: 8px 0; }
+
+.vip-link { animation: glow 2s infinite alternate; }
+@keyframes glow { from { text-shadow: 0 0 2px #ffdd00; } to { text-shadow: 0 0 8px #ffdd00, 0 0 15px #ff8800; } }
+
+/* Search & Actions */
+.search-wrapper { position: relative; }
+.search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+.search-input-sleek {
+    border: none; background-color: #f0f2f5; border-radius: 30px; padding: 8px 15px 8px 40px;
+    width: 220px; font-size: 0.9rem; color: #333; outline: none; transition: all 0.3s ease;
+}
+.search-input-sleek:focus { background-color: #fff; width: 280px; box-shadow: 0 0 0 2px #00aaff; }
+.cart-icon-wrapper { position: relative; color: #000066; text-decoration: none; padding: 5px; transition: transform 0.2s ease; display: inline-block;}
+.cart-icon-wrapper:hover { transform: scale(1.1); color: #ff8800; }
+.cart-badge {
+    position: absolute; top: -2px; right: -8px; background-color: #ff3366; color: white;
+    font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid white;
+}
+/* =========================================
+   OFFCANVAS MENU (MENU TRƯỢT BÊN PHẢI)
+   ========================================= */
+.menu-toggle-btn {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+.menu-toggle-btn:hover {
+    transform: scale(1.1);
+    color: #00aaff !important;
+}
+
+/* Ép kính mờ cho Menu Trượt */
+.uzuki-offcanvas {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    width: 350px !important;
+}
+
+/* Box User trong Menu */
+.user-panel-offcanvas {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240, 248, 255, 0.8));
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+/* Các thẻ Link trong Menu */
+.menu-links-offcanvas a {
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+}
+
+.menu-links-offcanvas a:hover, .menu-links-offcanvas a.active {
+    background-color: #fff;
+    color: #00aaff;
+    transform: translateX(8px);
+    box-shadow: 0 4px 10px rgba(0, 170, 255, 0.1);
+}
+
+.menu-links-offcanvas a i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.menu-links-offcanvas a:hover i {
+    transform: scale(1.2);
+}
+/* =========================================
+   8. KỆ TRUYỆN TRƯỢT NGANG (BOOKWALKER STYLE)
+   ========================================= */
+.comic-shelf {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 15px;
+    scroll-behavior: smooth;
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp */
+.comic-shelf::-webkit-scrollbar { height: 8px; }
+.comic-shelf::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+.comic-shelf::-webkit-scrollbar-thumb { background: #00aaff; border-radius: 10px; }
+.comic-shelf::-webkit-scrollbar-thumb:hover { background: #0077cc; }
+
+/* Thu nhỏ Card để lướt được nhiều truyện hơn */
+.comic-shelf .comic-card {
+    min-width: 180px; 
+    flex-shrink: 0; 
+}
+.comic-shelf .comic-cover {
+    height: 250px;
+}
+
+/* Cục Badge Số Rank tròn tròn ở góc dưới ảnh */
+.rank-badge {
+    position: absolute;
+    bottom: 75px; 
+    left: 10px;
+    background: linear-gradient(135deg, #ffdd00, #ff8800);
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    z-index: 3;
+    font-size: 1.2rem;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+    border: 2px solid white;
+}
+.rank-badge.rank-1 { background: linear-gradient(135deg, #ff0055, #ff3366); width: 45px; height: 45px; font-size: 1.5rem; bottom: 70px;}
+.rank-badge.rank-2 { background: linear-gradient(135deg, #00aaff, #0066ff); width: 40px; height: 40px; font-size: 1.3rem; bottom: 72px;}

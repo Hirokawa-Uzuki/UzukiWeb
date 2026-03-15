@@ -1,0 +1,62 @@
+﻿@model IEnumerable<UzukiWeb.Models.DonHang>
+@{
+    ViewData["Title"] = "Quản Lý Đơn Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <h4 class="fw-bold mb-4"><i class="bi bi-box-seam-fill text-primary me-2"></i> Danh Sách Đơn Hàng Shop</h4>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center">Mã Đơn</th>
+                            <th>Ngày Đặt</th>
+                            <th>Số Điện Thoại</th>
+                            <th class="text-end">Tổng Tiền</th>
+                            <th class="text-center">Trạng Thái</th>
+                            <th class="text-center">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center fw-bold">#@item.Id</td>
+                                <td>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="fw-bold">@item.SoDienThoai</td>
+                                <td class="text-end fw-black text-danger">@item.TongTien.ToString("N0") đ</td>
+                                <td class="text-center">
+                                    @if (item.TrangThai.Contains("Chờ"))
+                                    {
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">@item.TrangThai</span>
+                                    }
+                                    else if (item.TrangThai.Contains("Hoàn thành"))
+                                    {
+                                        <span class="badge bg-success px-3 py-2 rounded-pill">@item.TrangThai</span>
+                                    }
+                                    else if (item.TrangThai.Contains("Hủy"))
+                                    {
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill">@item.TrangThai</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill">@item.TrangThai</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary rounded-3 fw-bold">
+                                        <i class="bi bi-eye"></i> Xem & Xử lý
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+﻿@model UzukiWeb.Models.GoiNap
+@{
+    ViewData["Title"] = "Xác nhận Xóa Gói Nạp";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card shadow-sm border-0 rounded-4 w-50 mx-auto mt-5 p-4 text-center">
+    <div class="mb-3">
+        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+    </div>
+    <h3 class="fw-bold text-danger mb-3">CẢNH BÁO XÓA!</h3>
+    <p class="text-muted mb-4">Bạn có chắc chắn muốn xóa gói nạp <strong>@Model.TenGoi</strong> khỏi hệ thống?</p>
+
+    <!-- Khung thông tin -->
+    <div class="border rounded-3 p-3 text-start d-flex align-items-center mb-4 bg-light mx-auto" style="max-width: 400px;">
+        <div class="me-3">
+            <img src="~/images/@Model.Anh" alt="Ảnh" style="width: 50px; height: 50px; object-fit: contain;">
+        </div>
+        <div>
+            <h5 class="fw-bold text-dark mb-1">@Model.TenGoi</h5>
+            <span class="badge bg-danger">@String.Format("{0:N0}", Model.Gia) đ</span>
+        </div>
+    </div>
+
+    <!-- Nút xác nhận -->
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="d-flex justify-content-center gap-3">
+            <button type="submit" class="btn btn-danger fw-bold px-4 rounded-pill">
+                <i class="bi bi-trash"></i> Xác Nhận Xóa Thật
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary fw-bold px-4 rounded-pill">
+                <i class="bi bi-x-circle"></i> Hủy, Quay lại
+            </a>
+        </div>
+    </form>
+</div>

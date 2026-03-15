@@ -1,0 +1,47 @@
+﻿@model UzukiWeb.Models.Chuong
+@{
+    ViewData["Title"] = "Thêm Chương Mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var truyen = ViewBag.Truyen as UzukiWeb.Models.Truyen;
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="fw-bold m-0"><i class="bi bi-node-plus-fill text-primary me-2"></i> Đăng Chương Cho: <span class="text-danger">@truyen?.TenTruyen</span></h3>
+        <a href="/Admin/Chuong/Index?truyenId=@truyen?.Id" class="btn btn-outline-secondary rounded-pill fw-bold"><i class="bi bi-arrow-left"></i> Hủy & Quay lại</a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 col-lg-8">
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <input type="hidden" asp-for="TruyenId" />
+
+                <div class="row g-4 mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Số Thứ Tự <span class="text-danger">*</span></label>
+                        <input asp-for="SoThuTu" type="number" class="form-control" required />
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold">Tên Chương <span class="text-danger">*</span></label>
+                        <input asp-for="TenChuong" class="form-control" required placeholder="Ví dụ: Chương 1: Cuộc gặp gỡ..." />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-warning">Giá Mở Khóa (Coin) <span class="text-danger">*</span></label>
+                    <input asp-for="GiaCoin" type="number" class="form-control fw-black text-danger fs-5" required />
+                    <div class="form-text">Để 0 nếu là chương miễn phí cho mọi người đọc.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Nội Dung Chương</label>
+                    <textarea asp-for="NoiDung" class="form-control" rows="8" placeholder="Nhập nội dung truyện chữ hoặc mã nhúng ảnh truyện tranh vào đây..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-3 shadow-sm fs-5">
+                    <i class="bi bi-cloud-arrow-up me-2"></i> ĐĂNG CHƯƠNG LÊN WEB
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

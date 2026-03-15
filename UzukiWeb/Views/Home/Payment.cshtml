@@ -1,0 +1,136 @@
+﻿@{
+    ViewData["Title"] = "Thanh Toán Đơn Hàng";
+
+    // Lấy dữ liệu từ TempData do trang Premium truyền sang
+    var tenGoi = TempData["ThanhToan_TenGoi"]?.ToString() ?? "Gói Premium";
+    var soCoin = TempData["ThanhToan_Coin"]?.ToString() ?? "0";
+    var giaTien = TempData["ThanhToan_Gia"] != null ? Convert.ToInt32(TempData["ThanhToan_Gia"]) : 0;
+}
+
+<main class="container pb-5" style="margin-top: 110px; min-height: 80vh;">
+
+    <div class="text-center mb-5">
+        <h2 class="fw-black" style="color: #000066;">TIẾN HÀNH THANH TOÁN</h2>
+        <p class="text-muted">Vui lòng chọn phương thức thanh toán để hoàn tất đơn hàng</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="bi bi-credit-card-2-front text-primary me-2"></i>Phương thức thanh toán</h5>
+
+                <ul class="nav nav-pills flex-column gap-3 mb-4" id="paymentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <label class="nav-link active border rounded-3 p-3 d-flex align-items-center cursor-pointer shadow-sm" data-bs-toggle="pill" data-bs-target="#qr-method" style="cursor: pointer;">
+                            <input class="form-check-input me-3 fs-5" type="radio" name="paymentMethod" checked>
+                            <img src="~/images/Momo_logo.png" width="35" class="me-3 rounded">
+                            <div class="text-start">
+                                <div class="fw-bold text-dark">Ví Momo / VNPay</div>
+                                <div class="small text-muted">Quét mã QR bằng ứng dụng ngân hàng</div>
+                            </div>
+                        </label>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <label class="nav-link border rounded-3 p-3 d-flex align-items-center cursor-pointer" data-bs-toggle="pill" data-bs-target="#visa-method" style="cursor: pointer;">
+                            <input class="form-check-input me-3 fs-5" type="radio" name="paymentMethod">
+                            <img src="~/images/Visa_logo.jpg" width="40" class="me-3">
+                            <div class="text-start">
+                                <div class="fw-bold text-dark">Thẻ Tín Dụng / Ghi Nợ</div>
+                                <div class="small text-muted">Visa, Mastercard, JCB</div>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+
+                <div class="tab-content bg-light rounded-3 p-4 border">
+
+                    <div class="tab-pane fade show active text-center" id="qr-method">
+                        <h6 class="fw-bold text-danger mb-3">Mở ứng dụng Momo hoặc Ngân hàng để quét mã</h6>
+                        <div class="bg-white d-inline-block p-3 rounded-4 shadow-sm mb-3">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ThanhToan_Uzuki_@giaTien" class="img-fluid" alt="QR Code">
+                        </div>
+                        <p class="small text-muted mb-0">Hệ thống sẽ tự động duyệt sau khi bạn chuyển khoản thành công.</p>
+                    </div>
+
+                    <div class="tab-pane fade" id="visa-method">
+                        <h6 class="fw-bold text-primary mb-3">Nhập thông tin thẻ của bạn</h6>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Số thẻ</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="bi bi-credit-card text-muted"></i></span>
+                                <input type="text" class="form-control font-monospace" placeholder="4123 4567 8901 2345">
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Ngày hết hạn</label>
+                                <input type="text" class="form-control" placeholder="MM/YY">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Mã CVV</label>
+                                <input type="password" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                        <div class="mb-0 mt-3">
+                            <label class="form-label small fw-bold">Tên chủ thẻ</label>
+                            <input type="text" class="form-control text-uppercase" placeholder="NGUYEN VAN A">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="bi bi-receipt text-success me-2"></i>Tóm tắt đơn hàng</h5>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Sản phẩm:</span>
+                    <span class="fw-bold text-dark text-end">@tenGoi</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Nhận được:</span>
+                    <span class="fw-bold text-primary"><i class="bi bi-gem"></i> @soCoin Coin</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+                    <span class="text-muted">Phí giao dịch:</span>
+                    <span class="fw-bold text-dark">0 đ</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="fw-bold fs-5">Tổng cộng:</span>
+                    <span class="fw-black fs-3 text-danger">@giaTien.ToString("N0") đ</span>
+                </div>
+
+                <form asp-controller="Account" asp-action="TopUp" method="post">
+                    <input type="hidden" name="coinAmount" value="@soCoin" />
+                    <button type="button" onclick="fakePaymentProcess(this)" class="btn btn-warning w-100 fw-black fs-5 py-3 rounded-pill shadow-sm">
+                        THANH TOÁN NGAY
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <i class="bi bi-shield-check text-success"></i> <span class="small text-muted">Thanh toán bảo mật 100%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        function fakePaymentProcess(btn) {
+            // Đổi giao diện nút thành Loading
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Đang xử lý...';
+            btn.classList.add('disabled');
+
+            // Giả lập hệ thống đang kết nối ngân hàng mất 2 giây
+            setTimeout(function() {
+                // Submit form thật sự để cộng Coin vào DB
+                btn.closest('form').submit();
+            }, 2000);
+        }
+    </script>
+}
